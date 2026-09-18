@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ledger — Daily Expense Tracker</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📒</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="masthead-title">
+      <h1>Ledger</h1>
+      <p class="masthead-sub">A running record of what comes in and what goes out.</p>
+    </div>
+    <div class="masthead-controls">
+      <label class="month-picker">
+        <span>Showing</span>
+        <input type="month" id="monthFilter" />
+      </label>
+      <button class="btn btn-ghost" id="exportBtn" title="Download this month as CSV">Export CSV</button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <section class="entries-panel">
+      <div class="panel-head">
+        <h2>Entries</h2>
+        <button class="btn btn-primary" id="toggleFormBtn">+ Add entry</button>
+      </div>
+
+      <form id="entryForm" class="entry-form" hidden>
+        <div class="field">
+          <label for="f-date">Date</label>
+          <input type="date" id="f-date" required />
+        </div>
+        <div class="field">
+          <label for="f-desc">Description</label>
+          <input type="text" id="f-desc" placeholder="Coffee, bus fare, freelance payout…" required />
+        </div>
+        <div class="field">
+          <label for="f-category">Category</label>
+          <select id="f-category">
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Bills</option>
+            <option>Study</option>
+            <option>Health</option>
+            <option>Freelance income</option>
+            <option>Other income</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field field-amount">
+          <label for="f-amount">Amount</label>
+          <div class="amount-input">
+            <span class="currency" id="currencySymbol">Rs</span>
+            <input type="number" id="f-amount" min="0" step="0.01" placeholder="0.00" required />
+          </div>
+        </div>
+        <div class="field field-type">
+          <span class="fake-label">Type</span>
+          <div class="type-toggle">
+            <button type="button" class="type-btn active" data-type="expense">Expense</button>
+            <button type="button" class="type-btn" data-type="income">Income</button>
+          </div>
+        </div>
+        <div class="field field-submit">
+          <button type="submit" class="btn btn-primary">Record it</button>
+          <button type="button" class="btn btn-ghost" id="cancelFormBtn">Cancel</button>
+        </div>
+      </form>
+
+      <div class="ledger-table">
+        <div class="ledger-row ledger-head">
+          <span class="col-date">Date</span>
+          <span class="col-desc">Description</span>
+          <span class="col-cat">Category</span>
+          <span class="col-amount">Amount</span>
+          <span class="col-actions"></span>
+        </div>
+        <div id="entriesBody"></div>
+        <p id="emptyState" class="empty-state" hidden>
+          Nothing recorded for this month yet. Add your first entry above.
+        </p>
+      </div>
+    </section>
+
+    <aside class="summary-panel">
+      <div class="balance-card">
+        <span class="balance-label">Balance this month</span>
+        <span class="balance-figure" id="balanceFigure">Rs 0.00</span>
+        <div class="balance-split">
+          <div>
+            <span class="split-label">In</span>
+            <span class="split-figure income" id="totalIncome">Rs 0.00</span>
+          </div>
+          <div>
+            <span class="split-label">Out</span>
+            <span class="split-figure expense" id="totalExpense">Rs 0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown-card">
+        <h3>Where it went</h3>
+        <div id="breakdownBars" class="breakdown-bars"></div>
+        <p id="breakdownEmpty" class="empty-state small" hidden>No expenses yet this month.</p>
+      </div>
+
+      <div class="settings-card">
+        <h3>Settings</h3>
+        <label class="field-inline">
+          <span>Currency symbol</span>
+          <input type="text" id="currencyInput" maxlength="4" value="Rs" />
+        </label>
+        <button class="btn btn-ghost btn-danger" id="clearBtn">Clear this month's data</button>
+      </div>
+    </aside>
+
+  </main>
+
+  <footer class="page-footer">
+    <p>Stored only in this browser — nothing leaves your device.</p>
+  </footer>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
